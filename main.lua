@@ -13,13 +13,8 @@ local currentTween
 local mm2FarmActive = false
 local gardenAutoBuy = false
 local gardenAutoCollect = false
-local gardenAutoSell = false
 local selectedSeed = "Sunflower Seed"
 local toolGrabID = ""
-
--- 99 Nights Data
-local teleportTargets = {"Alien", "Alien Chest", "Alpha Wolf", "Bear", "Berry", "Chest", "Coal", "Item Chest", "Rifle", "Wolf"}
-local AimbotTargets = {"Alien", "Alpha Wolf", "Wolf", "Cultist", "Bear"}
 
 -- Window Setup
 local Window = Rayfield:CreateWindow({
@@ -33,7 +28,7 @@ local Window = Rayfield:CreateWindow({
    KeySettings = {
       Title = "OrangeHub",
       Subtitle = "Key System",
-      Note = "Join the Discord for the Key!", -- Key removed from notes
+      Note = "Join the Discord for the Key!",
       FileName = "OrangeKey",
       SaveKey = true,
       Key = {"iHateCherries1"}
@@ -52,10 +47,8 @@ local GardenTab = Window:CreateTab("Grow a Garden", 4483362458)
 local ForestTab = Window:CreateTab("99 Nights", 4483362458)
 local ftTab = Window:CreateTab("Universal", 4483362458)
 
--- [HOME TAB]
+--- [HOME TAB] ---
 HomeTab:CreateSection("OrangeHub Information")
-HomeTab:CreateParagraph({Title = "Status", Content = "Version 5.5 | All Systems Functional."})
-
 HomeTab:CreateButton({
    Name = "Copy Discord Invite",
    Callback = function()
@@ -69,9 +62,8 @@ HomeTab:CreateButton({
    Callback = function() Rayfield:Destroy() end,
 })
 
--- [MM2 TAB]
+--- [MM2 TAB] ---
 mm2Tab:CreateSection("Farming & Combat")
-
 mm2Tab:CreateToggle({
    Name = "Auto-Tween Coins",
    CurrentValue = false,
@@ -107,16 +99,15 @@ mm2Tab:CreateToggle({
 })
 
 mm2Tab:CreateButton({
-    Name = "Grab Dropped Gun",
+    Name = "Auto Grab Dropped Gun",
     Callback = function()
         local gun = workspace:FindFirstChild("GunDrop")
         if gun then lp.Character.HumanoidRootPart.CFrame = gun.CFrame end
     end
 })
 
--- [GROW A GARDEN TAB]
+--- [GROW A GARDEN TAB] ---
 GardenTab:CreateSection("Sam's Shop & Farm")
-
 GardenTab:CreateDropdown({
    Name = "Select Seed to Buy",
    Options = {"Sunflower Seed", "Tomato Seed", "Berry Seed", "Wheat Seed", "Pumpkin Seed", "Carrot Seed"},
@@ -125,12 +116,11 @@ GardenTab:CreateDropdown({
 })
 
 GardenTab:CreateToggle({
-   Name = "Auto Buy from Sam",
+   Name = "Auto Buy Selected Seed",
    CurrentValue = false,
    Callback = function(v)
       gardenAutoBuy = v
       while gardenAutoBuy do
-         local shop = workspace:FindFirstChild("Sam") or workspace:FindFirstChild("Shop")
          local remote = ReplicatedStorage:FindFirstChild("BuySeed", true) or ReplicatedStorage:FindFirstChild("Purchase", true)
          if remote then remote:InvokeServer(selectedSeed) end
          task.wait(1)
@@ -139,7 +129,7 @@ GardenTab:CreateToggle({
 })
 
 GardenTab:CreateToggle({
-   Name = "Auto Collect Crops",
+   Name = "Auto Collect & Sell",
    CurrentValue = false,
    Callback = function(v)
       gardenAutoCollect = v
@@ -154,58 +144,18 @@ GardenTab:CreateToggle({
    end
 })
 
-GardenTab:CreateToggle({
-   Name = "Auto Sell Crops",
-   CurrentValue = false,
-   Callback = function(v)
-      gardenAutoSell = v
-      while gardenAutoSell do
-         local sellRemote = ReplicatedStorage:FindFirstChild("Sell", true) or ReplicatedStorage:FindFirstChild("SellCrops", true)
-         if sellRemote then sellRemote:InvokeServer() end
-         task.wait(5)
-      end
-   end
-})
-
--- [99 NIGHTS TAB]
-ForestTab:CreateSection("Forest Survival Utilities")
-
-ForestTab:CreateToggle({
-    Name = "Item ESP",
-    CurrentValue = false,
-    Callback = function(state)
-        _G.ForestESP = state
-        while _G.ForestESP do
-            for _, item in pairs(workspace:GetDescendants()) do
-                if table.find(teleportTargets, item.Name) and not item:FindFirstChild("OrangeHighlight") then
-                    local h = Instance.new("Highlight", item)
-                    h.Name = "OrangeHighlight"
-                    h.FillColor = Color3.fromRGB(255, 165, 0)
-                    h.FillTransparency = 0.5
-                end
-            end
-            task.wait(2)
-        end
-    end
-})
-
+--- [99 NIGHTS TAB] ---
+ForestTab:CreateSection("99 Nights External Loader")
 ForestTab:CreateButton({
-    Name = "Teleport to Closest Loot",
+    Name = "Load 99 Nights OrangeHub",
     Callback = function()
-        local closest, dist = nil, math.huge
-        for _, obj in pairs(workspace:GetDescendants()) do
-            if table.find(teleportTargets, obj.Name) then
-                local d = (lp.Character.HumanoidRootPart.Position - obj:GetPivot().Position).Magnitude
-                if d < dist then dist = d closest = obj end
-            end
-        end
-        if closest then lp.Character:PivotTo(closest:GetPivot() + Vector3.new(0,3,0)) end
+        Rayfield:Notify({Title = "Loader", Content = "Fetching 99 Nights Script...", Duration = 3})
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/sigmalaney96-alt/orangehub/refs/heads/main/orange99nights"))()
     end
 })
 
--- [UNIVERSAL TAB]
+--- [UNIVERSAL TAB] ---
 ftTab:CreateSection("Tool Grabber")
-
 ftTab:CreateInput({
    Name = "Enter Tool ID",
    PlaceholderText = "Example: 1234567",
@@ -227,8 +177,7 @@ ftTab:CreateButton({
    end
 })
 
-ftTab:CreateSection("Power Tools")
-
+ftTab:CreateSection("Universal Tools")
 ftTab:CreateButton({
     Name = "Give F3X Building Tools",
     Callback = function()
