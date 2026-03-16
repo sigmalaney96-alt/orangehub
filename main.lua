@@ -14,7 +14,7 @@ local Window = Rayfield:CreateWindow({
    Name = "🍊 OrangeHub | Multi-Game",
    Icon = 0,
    Theme = "AmberGlow"
-   showText = "OrangeHub"
+   ShowText = "OrangeHub"
    LoadingTitle = "OrangeHub",
    LoadingSubtitle = "by LazyLaneTTLol",
    ConfigurationSaving = { Enabled = true, FolderName = "OrangeHubConfig" },
@@ -22,7 +22,7 @@ local Window = Rayfield:CreateWindow({
    KeySettings = {
       Title = "OrangeHub",
       Subtitle = "Key System",
-      Note = "Key: iHateCherries1",
+      Note = "Key is in Our Discord | https://discord.gg/sCnMv4bcQX ",
       FileName = "OrangeKey",
       SaveKey = true,
       Key = {"iHateCherries1"}
