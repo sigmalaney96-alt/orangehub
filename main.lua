@@ -150,7 +150,8 @@ ForestTab:CreateButton({
     Name = "Load 99 Nights OrangeHub",
     Callback = function()
         Rayfield:Notify({Title = "Loader", Content = "Fetching 99 Nights Script...", Duration = 3})
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/sigmalaney96-alt/orangehub/refs/heads/main/orange99nights"))()
+        -- Updated URL with .lua extension
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/sigmalaney96-alt/orangehub/refs/heads/main/orange99nights.lua"))()
     end
 })
 
