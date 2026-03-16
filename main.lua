@@ -18,9 +18,9 @@ local selectedSeed = "Sunflower Seed" -- Default
 
 -- Window Setup
 local Window = Rayfield:CreateWindow({
-   Name = "🍊 OrangeHub | V4.0",
+   Name = "🍊 OrangeHub",
    Icon = 0,
-   LoadingTitle = "OrangeHub",
+   LoadingTitle = "OrangeHub | v4.0",
    LoadingSubtitle = "by LazyLaneTTLol",
    Theme = "AmberGlow",
    ConfigurationSaving = { Enabled = true, FolderName = "OrangeHubConfig" },
@@ -28,7 +28,7 @@ local Window = Rayfield:CreateWindow({
    KeySettings = {
       Title = "OrangeHub",
       Subtitle = "Key System",
-      Note = "Key: iHateCherries1",
+      Note = "Key is in Discord | Discord : https://discord.gg/sCnMv4bcQX",
       FileName = "OrangeKey",
       SaveKey = true,
       Key = {"iHateCherries1"}
