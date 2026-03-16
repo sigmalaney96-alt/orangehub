@@ -13,6 +13,8 @@ local currentTween
 local Window = Rayfield:CreateWindow({
    Name = "🍊 OrangeHub | Multi-Game",
    Icon = 0,
+   Theme = "AmberGlow"
+   showText = "OrangeHub"
    LoadingTitle = "OrangeHub",
    LoadingSubtitle = "by LazyLaneTTLol",
    ConfigurationSaving = { Enabled = true, FolderName = "OrangeHubConfig" },
