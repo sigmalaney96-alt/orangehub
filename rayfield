@@ -1,0 +1,153 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+
+local Window = Rayfield:CreateWindow({
+   Name = "OrangeHub",
+   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   LoadingTitle = "OrangeHub",
+   LoadingSubtitle = "by LazyLaneTTLol",
+   ShowText = "OrangeHub", -- for mobile users to unhide Rayfield, change if you'd like
+   Theme = "AmberGlow", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+   ToggleUIKeybind = "P", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false -- Prevents Rayfield from emitting warnings when the script has a version mismatch with the interface.
+
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+
+   Discord = {
+      Enabled = true, -- Prompt the user to join your Discord server if their executor supports it
+      Invite = "sCnMv4bcQX", -- The Discord invite code, do not include Discord.gg/. E.g. Discord.gg/ ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the Discord every time they load it up
+   },
+
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "OrangeHub",
+      Subtitle = "Key System",
+      Note = "Join Our Discord", -- Use this to tell the user how to get a key
+      FileName = "Key", -- It is recommended to use something unique, as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"iHateCherries1"} -- List of keys that the system will accept, can be RAW file links (pastebin, github, etc.) or simple strings ("hello", "key22")
+   }
+})
+
+
+local mm2Tab = Window:CreateTab("MM2", 4483362458) -- Title, Image
+local ftTab = Window:CreateTab("Universal", 4483362458) -- Title, Image
+local Section = ftTab:CreateSection("Cool things!")
+
+Rayfield:Notify({
+   Title = "OrangeHub",
+   Content = "Successfully Loaded.",
+   Duration = 6.5,
+   Image = 4483362458,
+})
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+
+local bodyVelocity
+local flyConnection
+
+local Togglea = ftTab:CreateToggle({
+	Name = "Fly",
+	CurrentValue = false,
+	Flag = "FlyToggle",
+	Callback = function(Value)
+		if Value then
+			humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+
+			bodyVelocity = Instance.new("BodyVelocity")
+			bodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+			bodyVelocity.Parent = hrp
+
+			flyConnection = RunService.RenderStepped:Connect(function()
+				bodyVelocity.Velocity = workspace.CurrentCamera.CFrame.LookVector * 40
+			end)
+		else
+			if flyConnection then flyConnection:Disconnect() end
+			if bodyVelocity then bodyVelocity:Destroy() end
+			humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+		end
+	end,
+})
+
+
+local WalkSpeedSlider = ftTab:CreateSlider({
+    Name = "WalkSpeed",
+    Range = {16, 100}, -- Min and Max speed
+    Increment = 1,     -- Step size
+    Suffix = " Speed",
+    CurrentValue = 16, -- Default value
+    Flag = "WalkSpeedValue", -- Saved setting name
+    Callback = function(Value)
+        -- Validate and set WalkSpeed
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.WalkSpeed = Value
+   end,
+})
+
+local Toggle = mm2Tab:CreateToggle({
+   Name = "Auto Collect Coins",
+   CurrentValue = false,
+   Flag = "CoinToggle1", 
+   Callback = function(Value)
+      -- Using 'Value' directly from the toggle state
+      if Value then
+         task.spawn(function()
+            -- Loop runs as long as the toggle 'Value' is true
+            while Toggle.CurrentValue do 
+               local container = workspace:FindFirstChild("Normal") and workspace.Normal:FindFirstChild("CoinContainer")
+               
+               if container then
+                  for _, coin in pairs(container:GetChildren()) do
+                     if not Toggle.CurrentValue then break end
+                     
+                     local char = game.Players.LocalPlayer.Character
+                     local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                     local hum = char and char:FindFirstChild("Humanoid")
+                     
+                     if hrp and coin:IsA("BasePart") then
+                        -- Calculate duration for smooth movement
+                        local distance = (hrp.Position - coin.Position).Magnitude
+                        currentTween = TweenService:Create(hrp, TweenInfo.new(distance / 30, Enum.EasingStyle.Linear), {CFrame = coin.CFrame})
+                        
+                        currentTween:Play()
+                        currentTween.Completed:Wait()
+                        
+                        -- Jump logic
+                        if hum then
+                           hum.Jump = true
+                           task.wait(0.2)
+                           hum.Jump = true
+                        end
+                        task.wait(0.3)
+                     end
+                  end
+               else
+                  task.wait(2) -- Wait for map/round to load
+               end
+               task.wait(0.1)
+            end
+         end)
+      else
+         -- If turned off, immediately stop any movement
+         if currentTween then 
+            currentTween:Cancel() 
+         end
+      end
+   end,
+})
