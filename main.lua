@@ -13,16 +13,19 @@ local currentTween
 local Window = Rayfield:CreateWindow({
    Name = "🍊 OrangeHub | Multi-Game",
    Icon = 0,
-   Theme = "AmberGlow"
-   ShowText = "OrangeHub"
    LoadingTitle = "OrangeHub",
    LoadingSubtitle = "by LazyLaneTTLol",
-   ConfigurationSaving = { Enabled = true, FolderName = "OrangeHubConfig" },
+   Theme = "AmberGlow", -- Fixed: Added missing comma
+   ConfigurationSaving = { 
+      Enabled = true, 
+      FolderName = "OrangeHubConfig",
+      FileName = "MainConfig"
+   },
    KeySystem = true,
    KeySettings = {
       Title = "OrangeHub",
       Subtitle = "Key System",
-      Note = "Key is in Our Discord | https://discord.gg/sCnMv4bcQX ",
+      Note = "Key is in Our Discord | https://discord.gg/sCnMv4bcQX",
       FileName = "OrangeKey",
       SaveKey = true,
       Key = {"iHateCherries1"}
@@ -39,7 +42,7 @@ local ftTab = Window:CreateTab("Universal", 4483362458)
 
 -- [HOME TAB]
 MainTab:CreateSection("Information")
-MainTab:CreateParagraph({Title = "Status", Content = "OrangeHub is Online.\nBuild: Stable 2.5\nRaw: sigmalaney96-alt"})
+MainTab:CreateParagraph({Title = "Status", Content = "OrangeHub is Online.\nBuild: Stable 2.5\nFast Load Enabled."})
 MainTab:CreateButton({
    Name = "Destroy UI",
    Callback = function() Rayfield:Destroy() end,
@@ -47,7 +50,6 @@ MainTab:CreateButton({
 
 -- [UNIVERSAL TAB]
 ftTab:CreateSection("Movement")
-
 local flying = false
 local flySpeed = 50
 local bv
@@ -58,10 +60,9 @@ ftTab:CreateToggle({
     Flag = "FlyToggle",
     Callback = function(Value)
         flying = Value
-        local char = player.Character
-        local hrp = char:WaitForChild("HumanoidRootPart")
-        
         if flying then
+            local char = player.Character
+            local hrp = char:WaitForChild("HumanoidRootPart")
             bv = Instance.new("BodyVelocity")
             bv.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
             bv.Velocity = Vector3.new(0, 0, 0)
@@ -81,19 +82,15 @@ ftTab:CreateToggle({
 })
 
 ftTab:CreateSlider({
-    Name = "Fly Speed",
-    Range = {10, 300},
-    Increment = 5,
-    CurrentValue = 50,
-    Callback = function(v) flySpeed = v end
-})
-
-ftTab:CreateSlider({
     Name = "WalkSpeed",
     Range = {16, 250},
     Increment = 1,
     CurrentValue = 16,
-    Callback = function(v) if player.Character:FindFirstChild("Humanoid") then player.Character.Humanoid.WalkSpeed = v end end
+    Callback = function(v) 
+        if player.Character and player.Character:FindFirstChild("Humanoid") then 
+            player.Character.Humanoid.WalkSpeed = v 
+        end 
+    end
 })
 
 -- [MM2 TAB]
@@ -110,8 +107,9 @@ mm2Tab:CreateToggle({
          task.spawn(function()
             while mm2FarmActive do 
                local container = workspace:FindFirstChild("Normal") and workspace.Normal:FindFirstChild("CoinContainer")
-               if container and #container:GetChildren() > 0 then
-                  for _, coin in pairs(container:GetChildren()) do
+               if container then
+                  local coins = container:GetChildren()
+                  for _, coin in pairs(coins) do
                      if not mm2FarmActive then break end
                      local char = player.Character
                      local hrp = char and char:FindFirstChild("HumanoidRootPart")
@@ -123,13 +121,12 @@ mm2Tab:CreateToggle({
                         currentTween:Play()
                         currentTween.Completed:Wait()
                         
-                        -- Your specific double jump request
                         if hum then
                             hum.Jump = true
-                            task.wait(0.2)
+                            task.wait(0.15)
                             hum.Jump = true
                         end
-                        task.wait(0.3)
+                        task.wait(0.2)
                      end
                   end
                end
@@ -143,43 +140,18 @@ mm2Tab:CreateToggle({
 })
 
 -- [PRISON LIFE TAB]
-PrisonTab:CreateSection("Prison Utilities")
 PrisonTab:CreateButton({
     Name = "Get All Guns",
     Callback = function()
         local items = {"Remington 870", "M4A1", "AK-47"}
         for _, gun in pairs(items) do
-            workspace.Remote.ItemHandler:InvokeServer(workspace.Prison_Items.gears[gun])
+            local gear = workspace.Prison_Items.gears:FindFirstChild(gun)
+            if gear then
+                workspace.Remote.ItemHandler:InvokeServer(gear)
+            end
         end
     end
 })
 
--- [OTHER GAMES TAB]
-GameTab:CreateSection("Blox Fruits")
-GameTab:CreateButton({
-    Name = "Auto-Click (Combat)",
-    Callback = function()
-        _G.AutoClick = not _G.AutoClick
-        task.spawn(function()
-            while _G.AutoClick do
-                game:GetService("VirtualUser"):CaptureController()
-                game:GetService("VirtualUser"):Button1Down(Vector2.new(1280, 672))
-                task.wait(0.1)
-            end
-        end)
-    end
-})
-
-GameTab:CreateSection("Pet Sim 99")
-GameTab:CreateButton({
-   Name = "Auto-Tap",
-   Callback = function()
-       _G.Tap = not _G.Tap
-       while _G.Tap do
-           game:GetService("ReplicatedStorage").Network.Click:FireServer()
-           task.wait()
-       end
-   end
-})
-
-Rayfield:Notify({Title = "OrangeHub", Content = "Script successfully executed!", Duration = 5})
+-- Final Notification
+Rayfield:Notify({Title = "OrangeHub", Content = "Loaded and Ready!", Duration = 3})
