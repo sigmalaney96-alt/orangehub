@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "PrismTweaks | Universal",
+   Name = "PrismTweaks🧊",
    Icon = 0,
    LoadingTitle = "PrismTweaks Loader",
    LoadingSubtitle = "by OrangeHub",
@@ -20,7 +20,7 @@ local Window = Rayfield:CreateWindow({
    KeySettings = {
       Title = "PrismTweaks | Security",
       Subtitle = "On the OrangeHub Discord",
-      Note = "Key: TweaksAreBeautiful26", 
+      Note = "Key is in the OrangeHub Discord", 
       FileName = "PrismKey",
       SaveKey = true,
       GrabKeyFromSite = false, 
