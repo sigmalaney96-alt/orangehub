@@ -1,0 +1,75 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "OrangeHub | Support A Bug",
+   LoadingTitle = "OrangeHub Systems",
+   LoadingSubtitle = "by sigmalaney96",
+   ConfigurationSaving = {
+      Enabled = false
+   },
+   Discord = {
+      Enabled = false
+   },
+   KeySystem = false, -- No key system as requested
+   Theme = "AmberGlow" 
+})
+
+local Tab = Window:CreateTab("Support", 4483362458) -- Support Icon
+
+local bugMessage = ""
+
+local Input = Tab:CreateInput({
+   Name = "Describe the Bug",
+   PlaceholderText = "Type message here...",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Text)
+      bugMessage = Text
+   end,
+})
+
+Tab:CreateButton({
+   Name = "Submit Bug Report",
+   Callback = function()
+      if bugMessage == "" then
+         Rayfield:Notify({
+            Title = "Error",
+            Content = "Please type a message before submitting!",
+            Duration = 5,
+            Image = 4483362458,
+         })
+         return
+      end
+
+      -- Webhook Logic
+      local response = request({
+          Url = "https://discord.com/api/webhooks/1483867194239746078/lawO3MYHcBeaU5Lg9QLA0caACB9_XLE2cTEG0kAjgn_06MQeXhCwvATfFHbZrI0Lak9S",
+          Method = "POST",
+          Headers = {
+              ["Content-Type"] = "application/json"
+          },
+          Body = game:GetService("HttpService"):JSONEncode({
+              ["content"] = "New Bug Report:",
+              ["embeds"] = {{
+                  ["title"] = "OrangeHub Bug Report",
+                  ["description"] = bugMessage,
+                  ["color"] = 16753920 -- Orange color
+              }}
+          })
+      })
+
+      Rayfield:Notify({
+         Title = "Success",
+         Content = "Your report has been sent!",
+         Duration = 5,
+         Image = 4483362458,
+      })
+   end,
+})
+
+Tab:CreateButton({
+   Name = "Return to OrangeHub",
+   Callback = function()
+      Rayfield:Destroy()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/sigmalaney96-alt/orangehub/refs/heads/main/main.lua"))()
+   end,
+})
