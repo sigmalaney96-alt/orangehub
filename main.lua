@@ -22,7 +22,7 @@ local toolGrabID = ""
 
 -- Window Setup
 local Window = Rayfield:CreateWindow({
-   Name = "🍊 OrangeHub | V6.5",
+   Name = "🍊 OrangeHub | V6.6",
    Icon = 0,
    LoadingTitle = "OrangeHub",
    LoadingSubtitle = "by LazyLaneTTLol",
@@ -92,7 +92,17 @@ local GardenTab = Window:CreateTab("Grow a Garden", 4483362458)
 local ftTab = Window:CreateTab("Universal", 4483362458)
 
 --- [1. HOME TAB] ---
-HomeTab:CreateSection("Information & Utility")
+HomeTab:CreateSection("External Loaders")
+
+HomeTab:CreateButton({
+    Name = "🚀 Launch PrismTweaks",
+    Callback = function()
+        Rayfield:Notify({Title = "Prism", Content = "Launching PrismTweaks...", Duration = 3})
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/sigmalaney96-alt/orangehub/refs/heads/main/prism.lua"))()
+    end,
+})
+
+HomeTab:CreateSection("Links & Help")
 HomeTab:CreateButton({ Name = "Copy Discord Invite", Callback = function() setclipboard("https://discord.gg/sCnMv4bcQX") end })
 HomeTab:CreateButton({ Name = "Server Hop", Callback = function() game:GetService("TeleportService"):Teleport(game.PlaceId, lp) end })
 
@@ -369,4 +379,4 @@ ftTab:CreateButton({
     Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end
 })
 
-Rayfield:Notify({Title = "OrangeHub", Content = "V6.5 Mega Loaded Successfully!", Duration = 3})
+Rayfield:Notify({Title = "OrangeHub", Content = "V6.6 Prism Loaded!", Duration = 3})
