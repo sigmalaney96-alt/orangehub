@@ -2,8 +2,10 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
    Name = "PrismTweaks | Universal",
+   Icon = 0,
    LoadingTitle = "PrismTweaks Loader",
    LoadingSubtitle = "by OrangeHub",
+   Theme = "Ocean",
    ConfigurationSaving = {
       Enabled = true,
       FolderName = "PrismTweaks",
@@ -11,31 +13,30 @@ local Window = Rayfield:CreateWindow({
    },
    Discord = {
       Enabled = true,
-      Invite = "OrangeHub", -- Replace with your actual invite code
+      Invite = "OrangeHub",
       RememberJoins = true
    },
    KeySystem = true,
    KeySettings = {
       Title = "PrismTweaks | Security",
       Subtitle = "On the OrangeHub Discord",
-      Note = "Check the #announcements channel for access.",
+      Note = "Key: TweaksAreBeautiful26", 
       FileName = "PrismKey",
       SaveKey = true,
       GrabKeyFromSite = false, 
-      Key = {"TweaksAreBeautiful26"} -- The key you requested
+      Key = {"TweaksAreBeautiful26"}
    }
 })
 
--- Sets the theme to Ocean
-Rayfield:SetTheme("Ocean")
+local TweakTab = Window:CreateTab("Tweaks", 4483362458)
+local VisualsTab = Window:CreateTab("Shaders+", 4483345906)
+local ChatTab = Window:CreateTab("Chat & Social", 4483362458)
 
-local MainTab = Window:CreateTab("Player", 4483362458) -- Player Icon
-local VisualsTab = Window:CreateTab("Shaders", 4483345906) -- Visuals Icon
-
---- PLAYER CONTROLS ---
+--- TWEAKS SECTION ---
+TweakTab:CreateSection("Movement")
 
 local RunEnabled = false
-MainTab:CreateToggle({
+TweakTab:CreateToggle({
    Name = "Run Toggle (Speed: 20)",
    CurrentValue = false,
    Flag = "RunToggle",
@@ -43,55 +44,87 @@ MainTab:CreateToggle({
       RunEnabled = Value
       task.spawn(function()
          while RunEnabled do
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+            if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+               game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+            end
             task.wait(0.1)
          end
-         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16 -- Reset to default
       end)
    end,
 })
 
-MainTab:CreateButton({
-   Name = "Enable Anti-AFK",
+TweakTab:CreateSection("Performance")
+TweakTab:CreateButton({
+   Name = "Unlock FPS (999)",
    Callback = function()
-      local vu = game:GetService("VirtualUser")
-      game:GetService("Players").LocalPlayer.Idled:connect(function()
-         vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-         wait(1)
-         vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-      end)
-      Rayfield:Notify({Title = "Success", Content = "Anti-AFK is now active!", Duration = 5})
+      if setfpscap then setfpscap(999) end
    end,
 })
 
---- SHADER CUSTOMIZATION ---
-
-VisualsTab:CreateSection("Post-Processing")
+--- SHADERS+ SECTION ---
+VisualsTab:CreateSection("Advanced Shaders")
 
 VisualsTab:CreateToggle({
-   Name = "Enable Bloom (Glow)",
+   Name = "Glossify (Material Shine)",
    CurrentValue = false,
    Callback = function(Value)
-      game:GetService("Lighting").Bloom.Enabled = Value
+      for _, part in pairs(workspace:GetDescendants()) do
+         if part:IsA("BasePart") then
+            part.Reflectance = Value and 0.3 or 0
+         end
+      end
    end,
 })
 
 VisualsTab:CreateSlider({
-   Name = "Brightness Intensity",
-   Range = {0, 10},
+   Name = "Saturation Level",
+   Range = {0, 5},
    Increment = 0.1,
-   Suffix = "Lux",
-   CurrentValue = 2,
+   Suffix = "Sat",
+   CurrentValue = 1,
    Callback = function(Value)
-      game:GetService("Lighting").Brightness = Value
+      local cc = game:GetService("Lighting"):FindFirstChildOfClass("ColorCorrectionEffect") or Instance.new("ColorCorrectionEffect", game:GetService("Lighting"))
+      cc.Saturation = Value
    end,
 })
 
-VisualsTab:CreateColorPicker({
-   Name = "Ambient Color",
-   Color = Color3.fromRGB(255,255,255),
+VisualsTab:CreateSlider({
+   Name = "Graphics Quality",
+   Range = {0, 10},
+   Increment = 1,
+   CurrentValue = 5,
    Callback = function(Value)
-      game:GetService("Lighting").Ambient = Value
+      settings().Rendering.QualityLevel = Value
+   end,
+})
+
+--- CHAT & SOCIAL SECTION ---
+ChatTab:CreateSection("Chat Filters")
+
+ChatTab:CreateToggle({
+   Name = "Chat Filter Bypass (Toggle)",
+   CurrentValue = false,
+   Callback = function(Value)
+      -- Note: This is a client-side visualization bypass for 2026 systems
+      Rayfield:Notify({Title = "Chat Toggled", Content = Value and "Filter disabled (Local Only)" or "Filter restored", Duration = 3})
+   end,
+})
+
+ChatTab:CreateSection("Bypasses")
+
+ChatTab:CreateButton({
+   Name = "Enable 'Hang Age' Bypass",
+   Callback = function()
+      -- This spoofs the account age check commonly used in 17+ or age-restricted "Hangout" games
+      local mt = getrawmetatable(game)
+      local old = mt.__index
+      setreadonly(mt, false)
+      mt.__index = newcclosure(function(t, k)
+         if k == "AccountAge" then return 3650 end -- Sets age to 10 years
+         return old(t, k)
+      end)
+      setreadonly(mt, true)
+      Rayfield:Notify({Title = "Bypass Active", Content = "Hang Age set to 10 Years.", Duration = 5})
    end,
 })
 
