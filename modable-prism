@@ -1,0 +1,34 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "PrismTweaks | Modded",
+   Icon = 0,
+   LoadingTitle = "PrismTweaks | Modded",
+   LoadingSubtitle = "by OrangeHub",
+   Theme = "Ocean",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "PrismTweaks",
+      FileName = "Settings"
+   },
+   Discord = {
+      Enabled = true,
+      Invite = "OrangeHub",
+      RememberJoins = true
+   },
+   KeySystem = true,
+   KeySettings = {
+      Title = "PrismTweaks | Modded Key",
+      Subtitle = "Modified",
+      Note = "Modified Key", 
+      FileName = "PrismKey",
+      SaveKey = true,
+      GrabKeyFromSite = false, 
+      Key = {"custom"} -- You Can Change This
+   }
+})
+
+--This Is the already in script tabs
+local TweakTab = Window:CreateTab("Tweaks", 4483362458)
+local VisualsTab = Window:CreateTab("Shaders+", 4483345906)
+local ChatTab = Window:CreateTab("Chat & Social", 4483362458)
